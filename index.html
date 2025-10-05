@@ -1,721 +1,850 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Du'a Collection Navigator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;600&family=Source+Code+Pro:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Cinzel', serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            transition: background 0.5s ease;
-        }
+      body {
+        font-family: "Cinzel", serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        transition: background 0.5s ease;
+      }
 
-        .container {
-            width: 100%;
-            max-width: 900px;
-            position: relative;
-        }
+      .container {
+        width: 100%;
+        max-width: 900px;
+        position: relative;
+      }
 
+      .dua-display {
+        background: linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.15),
+          rgba(255, 255, 255, 0.08)
+        );
+        backdrop-filter: blur(25px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+        padding: 65px 45px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        min-height: 500px;
+      }
+
+      .dua-display::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 70%
+        );
+        animation: rotate 25s linear infinite;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .decorative-top {
+        width: 90px;
+        height: 4px;
+        margin: 0 auto 35px;
+        border-radius: 2px;
+        position: relative;
+        transition: background 0.3s ease;
+      }
+
+      .decorative-top::before,
+      .decorative-top::after {
+        content: "";
+        position: absolute;
+        top: -4px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        transition: background 0.3s ease;
+      }
+
+      .decorative-top::before {
+        left: -6px;
+      }
+      .decorative-top::after {
+        right: -6px;
+      }
+
+      .arabic-text {
+        font-family: "Amiri", serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: #ffffff;
+        line-height: 1.9;
+        margin-bottom: 35px;
+        text-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+        direction: rtl;
+        letter-spacing: 1px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .transliteration {
+        font-family: "Source Code Pro", monospace;
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.7;
+        margin-bottom: 35px;
+        text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+        font-style: italic;
+        position: relative;
+        z-index: 1;
+        padding: 22px;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+      }
+
+      .divider {
+        width: 100px;
+        height: 2px;
+        margin: 35px auto;
+        position: relative;
+        transition: background 0.3s ease;
+      }
+
+      .divider::before,
+      .divider::after {
+        position: absolute;
+        top: -9px;
+        font-size: 14px;
+        transition: color 0.3s ease;
+        content: attr(data-symbol);
+        color: var(--divider-color, #ffffff);
+        text-shadow: 0 0 12px rgba(var(--accent-rgb), 0.8);
+      }
+
+      .divider::before {
+        left: -18px;
+      }
+      .divider::after {
+        right: -18px;
+      }
+
+      .english-text {
+        font-family: "Cinzel", serif;
+        font-size: 17px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.95);
+        line-height: 1.7;
+        font-style: italic;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 1;
+      }
+
+      .decorative-bottom {
+        width: 90px;
+        height: 4px;
+        margin: 35px auto 0;
+        border-radius: 2px;
+        position: relative;
+        transition: background 0.3s ease;
+      }
+
+      .decorative-bottom::before,
+      .decorative-bottom::after {
+        content: "";
+        position: absolute;
+        top: -4px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        transition: background 0.3s ease;
+      }
+
+      .decorative-bottom::before {
+        left: -6px;
+      }
+      .decorative-bottom::after {
+        right: -6px;
+      }
+
+      .corner-pattern {
+        position: absolute;
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(
+          45deg,
+          transparent 35%,
+          rgba(255, 255, 255, 0.12) 50%,
+          transparent 65%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+      .corner-pattern.top-left {
+        top: 20px;
+        left: 20px;
+        border-right: none;
+        border-bottom: none;
+        border-top-left-radius: 12px;
+      }
+
+      .corner-pattern.top-right {
+        top: 20px;
+        right: 20px;
+        border-left: none;
+        border-bottom: none;
+        border-top-right-radius: 12px;
+      }
+
+      .corner-pattern.bottom-left {
+        bottom: 20px;
+        left: 20px;
+        border-right: none;
+        border-top: none;
+        border-bottom-left-radius: 12px;
+      }
+
+      .corner-pattern.bottom-right {
+        bottom: 20px;
+        right: 20px;
+        border-left: none;
+        border-top: none;
+        border-bottom-right-radius: 12px;
+      }
+
+      .navigation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 30px;
+        gap: 20px;
+      }
+
+      .nav-button {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 50px;
+        font-family: "Cinzel", serif;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nav-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .nav-button:active {
+        transform: translateY(0px);
+      }
+
+      .nav-button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .counter {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 12px 25px;
+        border-radius: 50px;
+        font-family: "Cinzel", serif;
+        font-size: 16px;
+        font-weight: 600;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .crud-section {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .crud-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .form-panel {
+        background: linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.15),
+          rgba(255, 255, 255, 0.08)
+        );
+        backdrop-filter: blur(25px);
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+        padding: 40px;
+        max-width: 800px;
+        width: 100%;
+      }
+
+      .form-panel h3 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-family: "Cinzel", serif;
+      }
+
+      .form-panel label {
+        display: block;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 5px;
+        font-family: "Cinzel", serif;
+        font-size: 16px;
+      }
+
+      .form-panel input,
+      .form-panel textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        margin-bottom: 20px;
+        font-family: inherit;
+        font-size: 14px;
+      }
+
+      .form-panel textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .form-panel input[type="color"] {
+        height: 40px;
+        padding: 5px;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .form-actions button {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: "Cinzel", serif;
+        font-weight: 600;
+      }
+
+      .form-actions button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      #arabic-input {
+        direction: rtl;
+        font-family: "Amiri", serif;
+      }
+
+      @media (max-width: 768px) {
         .dua-display {
-            background: linear-gradient(145deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08));
-            backdrop-filter: blur(25px);
-            border-radius: 25px;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
-            padding: 65px 45px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            min-height: 500px;
+          padding: 45px 25px;
         }
-
-        .dua-display::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: rotate 25s linear infinite;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .decorative-top {
-            width: 90px;
-            height: 4px;
-            margin: 0 auto 35px;
-            border-radius: 2px;
-            position: relative;
-            transition: background 0.3s ease;
-        }
-
-        .decorative-top::before,
-        .decorative-top::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            transition: background 0.3s ease;
-        }
-
-        .decorative-top::before { left: -6px; }
-        .decorative-top::after { right: -6px; }
 
         .arabic-text {
-            font-family: 'Amiri', serif;
-            font-size: 26px;
-            font-weight: 700;
-            color: #ffffff;
-            line-height: 1.9;
-            margin-bottom: 35px;
-            text-shadow: 0 3px 12px rgba(0,0,0,0.3);
-            direction: rtl;
-            letter-spacing: 1px;
-            position: relative;
-            z-index: 1;
+          font-size: 22px;
         }
 
         .transliteration {
-            font-family: 'Source Code Pro', monospace;
-            font-size: 15px;
-            font-weight: 500;
-            line-height: 1.7;
-            margin-bottom: 35px;
-            text-shadow: 0 1px 5px rgba(0,0,0,0.2);
-            font-style: italic;
-            position: relative;
-            z-index: 1;
-            padding: 22px;
-            border-radius: 15px;
-            transition: all 0.3s ease;
+          font-size: 13px;
+          padding: 18px;
         }
-
-        .divider {
-            width: 100px;
-            height: 2px;
-            margin: 35px auto;
-            position: relative;
-            transition: background 0.3s ease;
-        }
-
-        .divider::before,
-        .divider::after {
-            position: absolute;
-            top: -9px;
-            font-size: 14px;
-            transition: color 0.3s ease;
-            content: attr(data-symbol);
-            color: var(--divider-color, #ffffff);
-            text-shadow: 0 0 12px rgba(var(--accent-rgb), 0.8);
-        }
-
-        .divider::before { left: -18px; }
-        .divider::after { right: -18px; }
 
         .english-text {
-            font-family: 'Cinzel', serif;
-            font-size: 17px;
-            font-weight: 400;
-            color: rgba(255,255,255,0.95);
-            line-height: 1.7;
-            font-style: italic;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            position: relative;
-            z-index: 1;
+          font-size: 15px;
         }
 
-        .decorative-bottom {
-            width: 90px;
-            height: 4px;
-            margin: 35px auto 0;
-            border-radius: 2px;
-            position: relative;
-            transition: background 0.3s ease;
-        }
-
-        .decorative-bottom::before,
-        .decorative-bottom::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            transition: background 0.3s ease;
-        }
-
-        .decorative-bottom::before { left: -6px; }
-        .decorative-bottom::after { right: -6px; }
-
-        .corner-pattern {
-            position: absolute;
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(45deg, transparent 35%, rgba(255,255,255,0.12) 50%, transparent 65%);
-            border: 1px solid rgba(255,255,255,0.15);
-        }
-
-        .corner-pattern.top-left {
-            top: 20px;
-            left: 20px;
-            border-right: none;
-            border-bottom: none;
-            border-top-left-radius: 12px;
-        }
-
-        .corner-pattern.top-right {
-            top: 20px;
-            right: 20px;
-            border-left: none;
-            border-bottom: none;
-            border-top-right-radius: 12px;
-        }
-
-        .corner-pattern.bottom-left {
-            bottom: 20px;
-            left: 20px;
-            border-right: none;
-            border-top: none;
-            border-bottom-left-radius: 12px;
-        }
-
-        .corner-pattern.bottom-right {
-            bottom: 20px;
-            right: 20px;
-            border-left: none;
-            border-top: none;
-            border-bottom-right-radius: 12px;
-        }
-
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 30px;
-            gap: 20px;
+        .navigation,
+        .crud-buttons {
+          flex-direction: column;
         }
 
         .nav-button {
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-family: 'Cinzel', serif;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-button:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .nav-button:active {
-            transform: translateY(0px);
-        }
-
-        .nav-button:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .counter {
-            background: rgba(255,255,255,0.25);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-family: 'Cinzel', serif;
-            font-size: 16px;
-            font-weight: 600;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .crud-section {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .crud-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
+          width: 100%;
+          justify-content: center;
         }
 
         .form-panel {
-            background: linear-gradient(145deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08));
-            backdrop-filter: blur(25px);
-            border-radius: 25px;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
-            padding: 40px;
-            max-width: 800px;
-            width: 100%;
+          padding: 20px;
         }
-
-        .form-panel h3 {
-            text-align: center;
-            color: white;
-            margin-bottom: 20px;
-            font-size: 24px;
-            font-family: 'Cinzel', serif;
-        }
-
-        .form-panel label {
-            display: block;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 5px;
-            font-family: 'Cinzel', serif;
-            font-size: 16px;
-        }
-
-        .form-panel input,
-        .form-panel textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.1);
-            color: white;
-            margin-bottom: 20px;
-            font-family: inherit;
-            font-size: 14px;
-        }
-
-        .form-panel textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .form-panel input[type="color"] {
-            height: 40px;
-            padding: 5px;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .form-actions button {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Cinzel', serif;
-            font-weight: 600;
-        }
-
-        .form-actions button:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-
-        #arabic-input {
-            direction: rtl;
-            font-family: 'Amiri', serif;
-        }
-
-        @media (max-width: 768px) {
-            .dua-display {
-                padding: 45px 25px;
-            }
-            
-            .arabic-text {
-                font-size: 22px;
-            }
-            
-            .transliteration {
-                font-size: 13px;
-                padding: 18px;
-            }
-            
-            .english-text {
-                font-size: 15px;
-            }
-
-            .navigation,
-            .crud-buttons {
-                flex-direction: column;
-            }
-
-            .nav-button {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .form-panel {
-                padding: 20px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="dua-display">
-            <div class="corner-pattern top-left"></div>
-            <div class="corner-pattern top-right"></div>
-            <div class="corner-pattern bottom-left"></div>
-            <div class="corner-pattern bottom-right"></div>
-            
-            <div class="decorative-top"></div>
-            
-            <div class="arabic-text" id="arabic"></div>
-            <div class="transliteration" id="transliteration"></div>
-            
-            <div class="divider"></div>
-            
-            <div class="english-text" id="english"></div>
-            
-            <div class="decorative-bottom"></div>
-        </div>
+      <div class="dua-display">
+        <div class="corner-pattern top-left"></div>
+        <div class="corner-pattern top-right"></div>
+        <div class="corner-pattern bottom-left"></div>
+        <div class="corner-pattern bottom-right"></div>
 
-        <div class="navigation">
-            <button class="nav-button" id="prevBtn" onclick="previousDua()">
-                ← Previous
-            </button>
-            <div class="counter" id="counter">1 / 8</div>
-            <button class="nav-button" id="nextBtn" onclick="nextDua()">
-                Next →
-            </button>
-        </div>
+        <div class="decorative-top"></div>
 
-        <div class="crud-section">
-            <div class="crud-buttons">
-                <button class="nav-button" onclick="showAddForm()">+ Add New Du'a</button>
-                <button class="nav-button" onclick="showEditForm()">✏️ Edit Current</button>
-                <button class="nav-button" onclick="deleteDua()">🗑️ Delete Current</button>
-            </div>
-            <div id="form-panel" class="form-panel" style="display: none;">
-                <h3 id="form-title">Add New Du'a</h3>
-                <form id="duaForm">
-                    <label for="arabic-input">Arabic Text:</label>
-                    <textarea id="arabic-input" rows="3"></textarea>
-                    <label for="translit-input">Transliteration:</label>
-                    <textarea id="translit-input" rows="3"></textarea>
-                    <label for="english-input">English Translation:</label>
-                    <textarea id="english-input" rows="3"></textarea>
-                    <label for="bg-input">Background Gradient:</label>
-                    <input type="text" id="bg-input" placeholder="e.g., linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
-                    <label for="accent-input">Accent Color:</label>
-                    <input type="color" id="accent-input" value="#ffd700">
-                    <label for="divider-input">Divider Symbol:</label>
-                    <input type="text" id="divider-input" placeholder="e.g., ◆">
-                    <div class="form-actions">
-                        <button type="button" onclick="saveDua()">Save</button>
-                        <button type="button" onclick="cancelForm()">Cancel</button>
-                    </div>
-                </form>
-            </div>
+        <div class="arabic-text" id="arabic"></div>
+        <div class="transliteration" id="transliteration"></div>
+
+        <div class="divider"></div>
+
+        <div class="english-text" id="english"></div>
+
+        <div class="decorative-bottom"></div>
+      </div>
+
+      <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousDua()">
+          ← Previous
+        </button>
+        <div class="counter" id="counter">1 / 8</div>
+        <button class="nav-button" id="nextBtn" onclick="nextDua()">
+          Next →
+        </button>
+      </div>
+
+      <div class="crud-section">
+        <div class="crud-buttons">
+          <button class="nav-button" onclick="showAddForm()">
+            + Add New Du'a
+          </button>
+          <button class="nav-button" onclick="showEditForm()">
+            ✏️ Edit Current
+          </button>
+          <button class="nav-button" onclick="deleteDua()">
+            🗑️ Delete Current
+          </button>
         </div>
+        <div id="form-panel" class="form-panel" style="display: none">
+          <h3 id="form-title">Add New Du'a</h3>
+          <form id="duaForm">
+            <label for="arabic-input">Arabic Text:</label>
+            <textarea id="arabic-input" rows="3"></textarea>
+            <label for="translit-input">Transliteration:</label>
+            <textarea id="translit-input" rows="3"></textarea>
+            <label for="english-input">English Translation:</label>
+            <textarea id="english-input" rows="3"></textarea>
+            <label for="bg-input">Background Gradient:</label>
+            <input
+              type="text"
+              id="bg-input"
+              placeholder="e.g., linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            />
+            <label for="accent-input">Accent Color:</label>
+            <input type="color" id="accent-input" value="#ffd700" />
+            <label for="divider-input">Divider Symbol:</label>
+            <input type="text" id="divider-input" placeholder="e.g., ◆" />
+            <div class="form-actions">
+              <button type="button" onclick="saveDua()">Save</button>
+              <button type="button" onclick="cancelForm()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
     <script>
-        function hexToRgb(hex) {
-            hex = hex.replace('#', '');
-            const bigint = parseInt(hex, 16);
-            const r = (bigint >> 16) & 255;
-            const g = (bigint >> 8) & 255;
-            const b = bigint & 255;
-            return `${r}, ${g}, ${b}`;
+      function hexToRgb(hex) {
+        hex = hex.replace("#", "");
+        const bigint = parseInt(hex, 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `${r}, ${g}, ${b}`;
+      }
+
+      const defaultDuas = [
+        {
+          arabic:
+            "اللَّهُمَّ مَتِّعْنِي بِسَمْعِي وَبَصَرِي، وَاجْعَلْهُمَا الْوَارِثَ مِنِّي،<br>وَانْصُرْنِي عَلَى عَدُوِّي، وَأَرِنِي مِنْهُ ثَأْرِي",
+          transliteration:
+            "Allāhumma matti'nī bisam'ī wa baṣarī, waj'alhumā al-wāritha minnī,<br>wanṣurnī 'alā 'aduwwī, wa arinī minhu tha'rī.",
+          english:
+            '"O Allah, grant me benefit from my hearing and my sight,<br>and make them both outlast me,<br>and support me against my enemy,<br>and show me my revenge upon him."',
+          theme: {
+            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            accent: "#ffd700",
+            accentRGB: "255, 215, 0",
+            divider: "◆",
+          },
+        },
+        {
+          arabic:
+            "اللَّهُمَّ عَافِنِي مِنْ شَرِّ سَمْعِي، وَبَصَرِي، وَلِسَانِي،<br>وَقَلْبِي، وَشَرِّ مَنِيِّي",
+          transliteration:
+            "Allāhumma 'āfinī min sharri sam'ī, wa baṣarī, wa lisānī,<br>wa qalbī, wa sharri maniyyī.",
+          english:
+            '"O Allah, protect me from the evil of my hearing,<br>my sight, my tongue, my heart,<br>and the evil of my desires."',
+          theme: {
+            background:
+              "linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)",
+            accent: "#ff6b6b",
+            accentRGB: "255, 107, 107",
+            divider: "❋",
+          },
+        },
+        {
+          arabic:
+            "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَالْجُبْنِ وَالْهَرَمِ،<br>وَأَعُوذُ بِكَ مِنْ فِتْنَةِ الْمَحْيَا وَالْمَمَاتِ،<br>وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ",
+          transliteration:
+            "Allāhumma innī a'ūdhu bika minal-'ajzi wal-kasal, wal-jubni wal-haram,<br>wa a'ūdhu bika min fitnatil-maḥyā wal-mamāt,<br>wa a'ūdhu bika min 'adhābil-qabr.",
+          english:
+            '"O Allah, I seek refuge with You from incapacity, laziness,<br>cowardice and old age. I seek refuge with You from the trials<br>of life and death. I seek refuge with You from the<br>punishment of the grave."',
+          theme: {
+            background: "linear-gradient(135deg, #134e5e 0%, #71b280 100%)",
+            accent: "#4ecdc4",
+            accentRGB: "78, 205, 196",
+            divider: "✦",
+          },
+        },
+        {
+          arabic:
+            "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ<br>مِنْ جَهْدِ الْبَلَاءِ،<br>وَ دَرَكِ الشَّقَاءِ،<br>وَ سُوءِ الْقَضَاءِ،<br>وَ شَمَاتَةِ الْأَعْدَاءِ",
+          transliteration:
+            "Allāhumma innī a'ūdhu bika min jahdil-balā', wa darakish-shaqā',<br>wa sū'il-qaḍā', wa shamātatil-a'dā'.",
+          english:
+            '"O Allah, I seek refuge with You from the stress of calamity,<br>from being overtaken by misery, from bad judgment,<br>and from the gloating of enemies."',
+          theme: {
+            background:
+              "linear-gradient(135deg, #2c1810 0%, #8b4513 50%, #d2691e 100%)",
+            accent: "#ffd700",
+            accentRGB: "255, 215, 0",
+            divider: "❋",
+          },
+        },
+        {
+          arabic:
+            "اللَّهُمَّ أَصْلِحْ لِي دِينِي الَّذِي هُوَ عِصْمَةُ أَمْرِي،<br>وَأَصْلِحْ لِي دُنْيَايَ الَّتِي فِيهَا مَعَاشِي،<br>وَأَصْلِحْ لِي آخِرَتِي الَّتِي فِيهَا مَعَادِي،<br>وَاجْعَلِ الْحَيَاةَ زِيَادَةً لِي فِي كُلِّ خَيْرٍ،<br>وَاجْعَلِ الْمَوْتَ رَاحَةً لِي مِنْ كُلِّ شَرٍّ",
+          transliteration:
+            "Allāhumma aṣliḥ lī dīnī alladhī huwa 'iṣmatu amrī,<br>wa aṣliḥ lī dunyāya allatī fīhā ma'āshī,<br>wa aṣliḥ lī ākhiratī allatī fīhā ma'ādī,<br>waj'alil-ḥayāta ziyādatan lī fī kulli khayr,<br>waj'alil-mawta rāḥatan lī min kulli sharr.",
+          english:
+            '"O Allah, reform for me my religion which is the safeguard of my affairs.<br>Reform for me my worldly life in which is my livelihood.<br>Reform for me my Hereafter to which is my return.<br>Make life for me an increase in every good,<br>and make death for me a relief from every evil."',
+          theme: {
+            background:
+              "linear-gradient(135deg, #1a237e 0%, #3949ab 50%, #7986cb 100%)",
+            accent: "#5c6bc0",
+            accentRGB: "92, 107, 192",
+            divider: "✦",
+          },
+        },
+        {
+          arabic:
+            "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَالْجُبْنِ وَالْهَرَمِ،<br>وَأَعُوذُ بِكَ مِنْ فِتْنَةِ الْمَحْيَا وَالْمَمَاتِ،<br>وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ",
+          transliteration:
+            "Allāhumma innī a'ūdhu bika minal-'ajzi wal-kasal, wal-jubni wal-haram,<br>wa a'ūdhu bika min fitnatil-maḥyā wal-mamāt,<br>wa a'ūdhu bika min 'adhābil-qabr.",
+          english:
+            '"O Allah, I seek refuge with You from incapacity, laziness,<br>cowardice and old age. I seek refuge with You from the trials<br>of life and death. I seek refuge with You from the<br>punishment of the grave."',
+          theme: {
+            background:
+              "linear-gradient(135deg, #6a1b9a 0%, #8e24aa 50%, #ab47bc 100%)",
+            accent: "#e91e63",
+            accentRGB: "233, 30, 99",
+            divider: "❋",
+          },
+        },
+        {
+          arabic:
+            "اللَّهُمَّ أَصْلِحْ لِي دِينِي الَّذِي هُوَ عِصْمَةُ أَمْرِي،<br>وَأَصْلِحْ لِي دُنْيَايَ الَّتِي فِيهَا مَعَاشِي،<br>وَأَصْلِحْ لِي آخِرَتِي الَّتِي فِيهَا مَعَادِي،<br>وَاجْعَلِ الْحَيَاةَ زِيَادَةً لِي فِي كُلِّ خَيْرٍ،<br>وَاجْعَلِ الْمَوْتَ رَاحَةً لِي مِنْ كُلِّ شَرٍّ",
+          transliteration:
+            "Allāhumma aṣliḥ lī dīnī alladhī huwa 'iṣmatu amrī,<br>wa aṣliḥ lī dunyāya allatī fīhā ma'āshī,<br>wa aṣliḥ lī ākhiratī allatī fīhā ma'ādī,<br>waj'alil-ḥayāta ziyādatan lī fī kulli khayr,<br>waj'alil-mawta rāḥatan lī min kulli sharr.",
+          english:
+            '"O Allah, reform for me my religion which is the safeguard of my affairs.<br>Reform for me my worldly life in which is my livelihood.<br>Reform for me my Hereafter to which is my return.<br>Make life for me an increase in every good,<br>and make death for me a relief from every evil."',
+          theme: {
+            background:
+              "linear-gradient(135deg, #f57c00 0%, #ff9800 50%, #ffb74d 100%)",
+            accent: "#d84315",
+            accentRGB: "216, 67, 21",
+            divider: "✧",
+          },
+        },
+        {
+          arabic:
+            "اللَّهُمَّ قَنِّعْنِي بِمَا رَزَقْتَنِي، وَبَارِكْ لِي فِيهِ،<br>وَاخْلُفْ عَلَيَّ كُلَّ غَائِبَةٍ بِخَيْرٍ",
+          transliteration:
+            "Allāhumma qanni'nī bimā razaqtanī, wa bārik lī fīhi,<br>wakhluf 'alayya kulla ghā'ibatin bikhayr.",
+          english:
+            '"O Allah, make me content with the provision You have given me<br>and bless me in it, and appoint good for me<br>in every thing which I do not have."',
+          theme: {
+            background:
+              "linear-gradient(135deg, #1b5e20 0%, #388e3c 50%, #66bb6a 100%)",
+            accent: "#4caf50",
+            accentRGB: "76, 175, 80",
+            divider: "✿",
+          },
+        },
+        {
+          arabic:
+            "اللَّهُمَّ طَهِّرْنِي بِالْبَرْدِ وَالثَّلْجِ وَالْمَاءِ الْبَارِدِ، اللَّهُمَّ طَهِّرْنِي مِنَ الذُّنُوبِ، وَنَقِّنِي كَمَا يُنَقَّى الثَّوْبُ الأَبْيَضُ مِنَ الدَّنَسِ‏.‏",
+          transliteration:
+            "Allāhumma ṭahhirnī bil-baradi wa-th-thalji wa-l-mā'i l-bārid(i), Allāhumma ṭahhirnī mina dh-dhunūbi wa naqqinī kamā yu naqqā ath-thawbu l-abyadu mina d-danasi.",
+          english:
+            '"O Allah, purify me with ice, snow and cold water. O Allah, purify me from wrong actions and clean me as the white garment is cleansed of dirt."',
+          theme: {
+            background: "linear-gradient(135deg, #00b4db 0%, #0083b0 100%)",
+            accent: "#ffffff",
+            accentRGB: "255, 255, 255",
+            divider: "❄",
+          },
+        },
+        {
+          arabic:
+            "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ زَوَالِ نِعْمَتِكَ، وَتَحَوُّلِ عَافِيَتِكَ، وَفُجَأَةِ نِقْمَتِكَ، وَجَمِيعِ سَخَطِكَ‏.‏",
+          transliteration:
+            "Allāhumma innī a‘ūdhū bika min zawāli ni‘matika, wa taḥawwuli ‘āfiyatika, wa fuja’ati niqmatika, wa jamī‘i sakhṭika.",
+          english:
+            '"O Allah, I seek refuge with You from the disappearance of Your blessing and from the loss of good health and Your sudden vengeance and all of Your anger."',
+          theme: {
+            background: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
+            accent: "#ff6b35",
+            accentRGB: "255, 107, 53",
+            divider: "♦",
+          },
+        },
+      ];
+      let duas = JSON.parse(localStorage.getItem("duas")) || defaultDuas;
+      let currentIndex = 0;
+      let editingIndex = -1;
+
+      function saveToStorage() {
+        localStorage.setItem("duas", JSON.stringify(duas));
+      }
+
+      function updateDisplay() {
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const counter = document.getElementById("counter");
+
+        if (duas.length === 0) {
+          document.getElementById("arabic").innerHTML = "";
+          document.getElementById("transliteration").innerHTML = "";
+          document.getElementById("english").innerHTML = "";
+          counter.textContent = "0 / 0";
+          prevBtn.disabled = true;
+          nextBtn.disabled = true;
+          document.body.style.background =
+            defaultDuas[0]?.theme.background ||
+            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+          return;
         }
 
-        const defaultDuas = [
-            {
-                arabic: "اللَّهُمَّ مَتِّعْنِي بِسَمْعِي وَبَصَرِي، وَاجْعَلْهُمَا الْوَارِثَ مِنِّي،<br>وَانْصُرْنِي عَلَى عَدُوِّي، وَأَرِنِي مِنْهُ ثَأْرِي",
-                transliteration: "Allāhumma matti'nī bisam'ī wa baṣarī, waj'alhumā al-wāritha minnī,<br>wanṣurnī 'alā 'aduwwī, wa arinī minhu tha'rī.",
-                english: "\"O Allah, grant me benefit from my hearing and my sight,<br>and make them both outlast me,<br>and support me against my enemy,<br>and show me my revenge upon him.\"",
-                theme: {
-                    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                    accent: "#ffd700",
-                    accentRGB: "255, 215, 0",
-                    divider: "◆"
-                }
-            },
-            {
-                arabic: "اللَّهُمَّ عَافِنِي مِنْ شَرِّ سَمْعِي، وَبَصَرِي، وَلِسَانِي،<br>وَقَلْبِي، وَشَرِّ مَنِيِّي",
-                transliteration: "Allāhumma 'āfinī min sharri sam'ī, wa baṣarī, wa lisānī,<br>wa qalbī, wa sharri maniyyī.",
-                english: "\"O Allah, protect me from the evil of my hearing,<br>my sight, my tongue, my heart,<br>and the evil of my desires.\"",
-                theme: {
-                    background: "linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)",
-                    accent: "#ff6b6b",
-                    accentRGB: "255, 107, 107",
-                    divider: "❋"
-                }
-            },
-            {
-                arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَالْجُبْنِ وَالْهَرَمِ،<br>وَأَعُوذُ بِكَ مِنْ فِتْنَةِ الْمَحْيَا وَالْمَمَاتِ،<br>وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ",
-                transliteration: "Allāhumma innī a'ūdhu bika minal-'ajzi wal-kasal, wal-jubni wal-haram,<br>wa a'ūdhu bika min fitnatil-maḥyā wal-mamāt,<br>wa a'ūdhu bika min 'adhābil-qabr.",
-                english: "\"O Allah, I seek refuge with You from incapacity, laziness,<br>cowardice and old age. I seek refuge with You from the trials<br>of life and death. I seek refuge with You from the<br>punishment of the grave.\"",
-                theme: {
-                    background: "linear-gradient(135deg, #134e5e 0%, #71b280 100%)",
-                    accent: "#4ecdc4",
-                    accentRGB: "78, 205, 196",
-                    divider: "✦"
-                }
-            },
-            {
-                arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ<br>مِنْ جَهْدِ الْبَلَاءِ،<br>وَ دَرَكِ الشَّقَاءِ،<br>وَ سُوءِ الْقَضَاءِ،<br>وَ شَمَاتَةِ الْأَعْدَاءِ",
-                transliteration: "Allāhumma innī a'ūdhu bika min jahdil-balā', wa darakish-shaqā',<br>wa sū'il-qaḍā', wa shamātatil-a'dā'.",
-                english: "\"O Allah, I seek refuge with You from the stress of calamity,<br>from being overtaken by misery, from bad judgment,<br>and from the gloating of enemies.\"",
-                theme: {
-                    background: "linear-gradient(135deg, #2c1810 0%, #8b4513 50%, #d2691e 100%)",
-                    accent: "#ffd700",
-                    accentRGB: "255, 215, 0",
-                    divider: "❋"
-                }
-            },
-            {
-                arabic: "اللَّهُمَّ أَصْلِحْ لِي دِينِي الَّذِي هُوَ عِصْمَةُ أَمْرِي،<br>وَأَصْلِحْ لِي دُنْيَايَ الَّتِي فِيهَا مَعَاشِي،<br>وَأَصْلِحْ لِي آخِرَتِي الَّتِي فِيهَا مَعَادِي،<br>وَاجْعَلِ الْحَيَاةَ زِيَادَةً لِي فِي كُلِّ خَيْرٍ،<br>وَاجْعَلِ الْمَوْتَ رَاحَةً لِي مِنْ كُلِّ شَرٍّ",
-                transliteration: "Allāhumma aṣliḥ lī dīnī alladhī huwa 'iṣmatu amrī,<br>wa aṣliḥ lī dunyāya allatī fīhā ma'āshī,<br>wa aṣliḥ lī ākhiratī allatī fīhā ma'ādī,<br>waj'alil-ḥayāta ziyādatan lī fī kulli khayr,<br>waj'alil-mawta rāḥatan lī min kulli sharr.",
-                english: "\"O Allah, reform for me my religion which is the safeguard of my affairs.<br>Reform for me my worldly life in which is my livelihood.<br>Reform for me my Hereafter to which is my return.<br>Make life for me an increase in every good,<br>and make death for me a relief from every evil.\"",
-                theme: {
-                    background: "linear-gradient(135deg, #1a237e 0%, #3949ab 50%, #7986cb 100%)",
-                    accent: "#5c6bc0",
-                    accentRGB: "92, 107, 192",
-                    divider: "✦"
-                }
-            },
-            {
-                arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَالْجُبْنِ وَالْهَرَمِ،<br>وَأَعُوذُ بِكَ مِنْ فِتْنَةِ الْمَحْيَا وَالْمَمَاتِ،<br>وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ",
-                transliteration: "Allāhumma innī a'ūdhu bika minal-'ajzi wal-kasal, wal-jubni wal-haram,<br>wa a'ūdhu bika min fitnatil-maḥyā wal-mamāt,<br>wa a'ūdhu bika min 'adhābil-qabr.",
-                english: "\"O Allah, I seek refuge with You from incapacity, laziness,<br>cowardice and old age. I seek refuge with You from the trials<br>of life and death. I seek refuge with You from the<br>punishment of the grave.\"",
-                theme: {
-                    background: "linear-gradient(135deg, #6a1b9a 0%, #8e24aa 50%, #ab47bc 100%)",
-                    accent: "#e91e63",
-                    accentRGB: "233, 30, 99",
-                    divider: "❋"
-                }
-            },
-            {
-                arabic: "اللَّهُمَّ أَصْلِحْ لِي دِينِي الَّذِي هُوَ عِصْمَةُ أَمْرِي،<br>وَأَصْلِحْ لِي دُنْيَايَ الَّتِي فِيهَا مَعَاشِي،<br>وَأَصْلِحْ لِي آخِرَتِي الَّتِي فِيهَا مَعَادِي،<br>وَاجْعَلِ الْحَيَاةَ زِيَادَةً لِي فِي كُلِّ خَيْرٍ،<br>وَاجْعَلِ الْمَوْتَ رَاحَةً لِي مِنْ كُلِّ شَرٍّ",
-                transliteration: "Allāhumma aṣliḥ lī dīnī alladhī huwa 'iṣmatu amrī,<br>wa aṣliḥ lī dunyāya allatī fīhā ma'āshī,<br>wa aṣliḥ lī ākhiratī allatī fīhā ma'ādī,<br>waj'alil-ḥayāta ziyādatan lī fī kulli khayr,<br>waj'alil-mawta rāḥatan lī min kulli sharr.",
-                english: "\"O Allah, reform for me my religion which is the safeguard of my affairs.<br>Reform for me my worldly life in which is my livelihood.<br>Reform for me my Hereafter to which is my return.<br>Make life for me an increase in every good,<br>and make death for me a relief from every evil.\"",
-                theme: {
-                    background: "linear-gradient(135deg, #f57c00 0%, #ff9800 50%, #ffb74d 100%)",
-                    accent: "#d84315",
-                    accentRGB: "216, 67, 21",
-                    divider: "✧"
-                }
-            },
-            {
-                arabic: "اللَّهُمَّ قَنِّعْنِي بِمَا رَزَقْتَنِي، وَبَارِكْ لِي فِيهِ،<br>وَاخْلُفْ عَلَيَّ كُلَّ غَائِبَةٍ بِخَيْرٍ",
-                transliteration: "Allāhumma qanni'nī bimā razaqtanī, wa bārik lī fīhi,<br>wakhluf 'alayya kulla ghā'ibatin bikhayr.",
-                english: "\"O Allah, make me content with the provision You have given me<br>and bless me in it, and appoint good for me<br>in every thing which I do not have.\"",
-                theme: {
-                    background: "linear-gradient(135deg, #1b5e20 0%, #388e3c 50%, #66bb6a 100%)",
-                    accent: "#4caf50",
-                    accentRGB: "76, 175, 80",
-                    divider: "✿"
-                }
-            }
-        ];
+        const dua = duas[currentIndex];
 
-        let duas = JSON.parse(localStorage.getItem('duas')) || defaultDuas;
-        let currentIndex = 0;
-        let editingIndex = -1;
+        document.getElementById("arabic").innerHTML = dua.arabic;
+        document.getElementById("transliteration").innerHTML =
+          dua.transliteration;
+        document.getElementById("english").innerHTML = dua.english;
+        counter.textContent = `${currentIndex + 1} / ${duas.length}`;
 
-        function saveToStorage() {
-            localStorage.setItem('duas', JSON.stringify(duas));
+        document.body.style.background = dua.theme.background;
+        document.body.style.setProperty("--accent-rgb", dua.theme.accentRGB);
+
+        const decorativeTop = document.querySelector(".decorative-top");
+        const decorativeBottom = document.querySelector(".decorative-bottom");
+        decorativeTop.style.background = `linear-gradient(90deg, ${dua.theme.accent}, ${dua.theme.accent}dd)`;
+        decorativeBottom.style.background = `linear-gradient(90deg, ${dua.theme.accent}, ${dua.theme.accent}dd)`;
+        decorativeTop.style.boxShadow = `0 0 20px rgba(${dua.theme.accentRGB}, 0.5)`;
+        decorativeBottom.style.boxShadow = `0 0 20px rgba(${dua.theme.accentRGB}, 0.5)`;
+
+        document
+          .querySelectorAll(
+            ".decorative-top::before, .decorative-top::after, .decorative-bottom::before, .decorative-bottom::after"
+          )
+          .forEach((el) => {
+            el.style.background = dua.theme.accent;
+          });
+
+        const transliteration = document.getElementById("transliteration");
+        transliteration.style.color = dua.theme.accent;
+        transliteration.style.background = `rgba(${dua.theme.accentRGB}, 0.08)`;
+        transliteration.style.borderColor = `rgba(${dua.theme.accentRGB}, 0.2)`;
+
+        const divider = document.querySelector(".divider");
+        divider.style.background = `linear-gradient(90deg, transparent, ${dua.theme.accent}, transparent)`;
+        divider.setAttribute("data-symbol", dua.theme.divider);
+        divider.style.setProperty("--divider-color", dua.theme.accent);
+
+        prevBtn.disabled = currentIndex <= 0;
+        nextBtn.disabled = currentIndex >= duas.length - 1;
+      }
+
+      function nextDua() {
+        if (duas.length > 0 && currentIndex < duas.length - 1) {
+          currentIndex++;
+          updateDisplay();
         }
+      }
 
-        function updateDisplay() {
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const counter = document.getElementById('counter');
-
-            if (duas.length === 0) {
-                document.getElementById('arabic').innerHTML = '';
-                document.getElementById('transliteration').innerHTML = '';
-                document.getElementById('english').innerHTML = '';
-                counter.textContent = '0 / 0';
-                prevBtn.disabled = true;
-                nextBtn.disabled = true;
-                document.body.style.background = defaultDuas[0]?.theme.background || "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
-                return;
-            }
-
-            const dua = duas[currentIndex];
-            
-            document.getElementById('arabic').innerHTML = dua.arabic;
-            document.getElementById('transliteration').innerHTML = dua.transliteration;
-            document.getElementById('english').innerHTML = dua.english;
-            counter.textContent = `${currentIndex + 1} / ${duas.length}`;
-            
-            document.body.style.background = dua.theme.background;
-            document.body.style.setProperty('--accent-rgb', dua.theme.accentRGB);
-            
-            const decorativeTop = document.querySelector('.decorative-top');
-            const decorativeBottom = document.querySelector('.decorative-bottom');
-            decorativeTop.style.background = `linear-gradient(90deg, ${dua.theme.accent}, ${dua.theme.accent}dd)`;
-            decorativeBottom.style.background = `linear-gradient(90deg, ${dua.theme.accent}, ${dua.theme.accent}dd)`;
-            decorativeTop.style.boxShadow = `0 0 20px rgba(${dua.theme.accentRGB}, 0.5)`;
-            decorativeBottom.style.boxShadow = `0 0 20px rgba(${dua.theme.accentRGB}, 0.5)`;
-            
-            document.querySelectorAll('.decorative-top::before, .decorative-top::after, .decorative-bottom::before, .decorative-bottom::after').forEach(el => {
-                el.style.background = dua.theme.accent;
-            });
-            
-            const transliteration = document.getElementById('transliteration');
-            transliteration.style.color = dua.theme.accent;
-            transliteration.style.background = `rgba(${dua.theme.accentRGB}, 0.08)`;
-            transliteration.style.borderColor = `rgba(${dua.theme.accentRGB}, 0.2)`;
-            
-            const divider = document.querySelector('.divider');
-            divider.style.background = `linear-gradient(90deg, transparent, ${dua.theme.accent}, transparent)`;
-            divider.setAttribute('data-symbol', dua.theme.divider);
-            divider.style.setProperty('--divider-color', dua.theme.accent);
-            
-            prevBtn.disabled = currentIndex <= 0;
-            nextBtn.disabled = currentIndex >= duas.length - 1;
+      function previousDua() {
+        if (duas.length > 0 && currentIndex > 0) {
+          currentIndex--;
+          updateDisplay();
         }
+      }
 
-        function nextDua() {
-            if (duas.length > 0 && currentIndex < duas.length - 1) {
-                currentIndex++;
-                updateDisplay();
-            }
+      function showAddForm() {
+        editingIndex = -1;
+        document.getElementById("form-title").textContent = "Add New Du'a";
+        clearForm();
+        document.getElementById("form-panel").style.display = "block";
+      }
+
+      function showEditForm() {
+        if (duas.length === 0) {
+          alert("No Du'as available to edit.");
+          return;
         }
+        editingIndex = currentIndex;
+        const dua = duas[currentIndex];
+        document.getElementById("form-title").textContent = "Edit Du'a";
+        document.getElementById("arabic-input").value = dua.arabic.replace(
+          /<br>/g,
+          "\n"
+        );
+        document.getElementById("translit-input").value =
+          dua.transliteration.replace(/<br>/g, "\n");
+        document.getElementById("english-input").value = dua.english.replace(
+          /<br>/g,
+          "\n"
+        );
+        document.getElementById("bg-input").value = dua.theme.background;
+        document.getElementById("accent-input").value = dua.theme.accent;
+        document.getElementById("divider-input").value = dua.theme.divider;
+        document.getElementById("form-panel").style.display = "block";
+      }
 
-        function previousDua() {
-            if (duas.length > 0 && currentIndex > 0) {
-                currentIndex--;
-                updateDisplay();
-            }
+      function clearForm() {
+        document.getElementById("arabic-input").value = "";
+        document.getElementById("translit-input").value = "";
+        document.getElementById("english-input").value = "";
+        document.getElementById("bg-input").value = "";
+        document.getElementById("accent-input").value = "#ffd700";
+        document.getElementById("divider-input").value = "◆";
+      }
+
+      function saveDua() {
+        const arabicInput = document
+          .getElementById("arabic-input")
+          .value.trim();
+        if (!arabicInput) {
+          alert("Please fill in the Arabic text.");
+          return;
         }
-
-        function showAddForm() {
-            editingIndex = -1;
-            document.getElementById('form-title').textContent = 'Add New Du\'a';
-            clearForm();
-            document.getElementById('form-panel').style.display = 'block';
+        const accent = document.getElementById("accent-input").value;
+        const accentRGB = hexToRgb(accent);
+        const newDua = {
+          arabic: arabicInput.replace(/\n/g, "<br>"),
+          transliteration: document
+            .getElementById("translit-input")
+            .value.replace(/\n/g, "<br>"),
+          english: document
+            .getElementById("english-input")
+            .value.replace(/\n/g, "<br>"),
+          theme: {
+            background:
+              document.getElementById("bg-input").value ||
+              defaultDuas[0].theme.background,
+            accent: accent,
+            accentRGB: accentRGB,
+            divider: document.getElementById("divider-input").value || "◆",
+          },
+        };
+        if (editingIndex === -1) {
+          duas.push(newDua);
+          currentIndex = duas.length - 1;
+        } else {
+          duas[editingIndex] = newDua;
         }
-
-        function showEditForm() {
-            if (duas.length === 0) {
-                alert('No Du\'as available to edit.');
-                return;
-            }
-            editingIndex = currentIndex;
-            const dua = duas[currentIndex];
-            document.getElementById('form-title').textContent = 'Edit Du\'a';
-            document.getElementById('arabic-input').value = dua.arabic.replace(/<br>/g, '\n');
-            document.getElementById('translit-input').value = dua.transliteration.replace(/<br>/g, '\n');
-            document.getElementById('english-input').value = dua.english.replace(/<br>/g, '\n');
-            document.getElementById('bg-input').value = dua.theme.background;
-            document.getElementById('accent-input').value = dua.theme.accent;
-            document.getElementById('divider-input').value = dua.theme.divider;
-            document.getElementById('form-panel').style.display = 'block';
-        }
-
-        function clearForm() {
-            document.getElementById('arabic-input').value = '';
-            document.getElementById('translit-input').value = '';
-            document.getElementById('english-input').value = '';
-            document.getElementById('bg-input').value = '';
-            document.getElementById('accent-input').value = '#ffd700';
-            document.getElementById('divider-input').value = '◆';
-        }
-
-        function saveDua() {
-            const arabicInput = document.getElementById('arabic-input').value.trim();
-            if (!arabicInput) {
-                alert('Please fill in the Arabic text.');
-                return;
-            }
-            const accent = document.getElementById('accent-input').value;
-            const accentRGB = hexToRgb(accent);
-            const newDua = {
-                arabic: arabicInput.replace(/\n/g, '<br>'),
-                transliteration: document.getElementById('translit-input').value.replace(/\n/g, '<br>'),
-                english: document.getElementById('english-input').value.replace(/\n/g, '<br>'),
-                theme: {
-                    background: document.getElementById('bg-input').value || defaultDuas[0].theme.background,
-                    accent: accent,
-                    accentRGB: accentRGB,
-                    divider: document.getElementById('divider-input').value || '◆'
-                }
-            };
-            if (editingIndex === -1) {
-                duas.push(newDua);
-                currentIndex = duas.length - 1;
-            } else {
-                duas[editingIndex] = newDua;
-            }
-            saveToStorage();
-            hideForm();
-            updateDisplay();
-        }
-
-        function deleteDua() {
-            if (duas.length === 0) {
-                alert('No Du\'as available to delete.');
-                return;
-            }
-            if (confirm('Are you sure you want to delete this Du\'a? This action cannot be undone.')) {
-                duas.splice(currentIndex, 1);
-                if (duas.length === 0) {
-                    currentIndex = 0;
-                } else if (currentIndex >= duas.length) {
-                    currentIndex = duas.length - 1;
-                }
-                saveToStorage();
-                updateDisplay();
-            }
-        }
-
-        function cancelForm() {
-            hideForm();
-        }
-
-        function hideForm() {
-            document.getElementById('form-panel').style.display = 'none';
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') nextDua();
-            if (e.key === 'ArrowLeft') previousDua();
-        });
-
+        saveToStorage();
+        hideForm();
         updateDisplay();
+      }
+
+      function deleteDua() {
+        if (duas.length === 0) {
+          alert("No Du'as available to delete.");
+          return;
+        }
+        if (
+          confirm(
+            "Are you sure you want to delete this Du'a? This action cannot be undone."
+          )
+        ) {
+          duas.splice(currentIndex, 1);
+          if (duas.length === 0) {
+            currentIndex = 0;
+          } else if (currentIndex >= duas.length) {
+            currentIndex = duas.length - 1;
+          }
+          saveToStorage();
+          updateDisplay();
+        }
+      }
+
+      function cancelForm() {
+        hideForm();
+      }
+
+      function hideForm() {
+        document.getElementById("form-panel").style.display = "none";
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") nextDua();
+        if (e.key === "ArrowLeft") previousDua();
+      });
+
+      updateDisplay();
     </script>
-</body>
+  </body>
 </html>
